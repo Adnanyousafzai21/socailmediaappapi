@@ -8,8 +8,9 @@ dotenv.config({path: "/.env"})
 const app = express()
 app.use(express.json())
 app.use(cors({
-    origin:"*"
-}))
+    origin: '*',
+      credentials: true, 
+  }))
 
 connectDB()
 .then(()=>{
