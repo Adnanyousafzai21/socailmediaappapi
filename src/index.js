@@ -24,7 +24,7 @@ connectDB()
 import  {userRouter, postRouter } from "./routes/routes.js"
 
 
-app.get("/", (res, req)=>{
+app.get("/", (req, res)=>{
 res.send({message:"congritulation your app is wroking perfictly"})
 })
 app.use("/api/v1/users", userRouter);
