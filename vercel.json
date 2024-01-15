@@ -8,13 +8,20 @@
   ],
   "routes": [
     {
+      "src": "/api/v1/posts/getPosts",
+      "methods": ["GET","DELETE","POST"],
+      "headers": {
+        "Access-Control-Allow-Origin": "https://socailmediaapp.vercel.app",
+        "Access-Control-Allow-Credentials": "true"
+      },
+      "dest": "src/index.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "src/index.js",
-      "methods": [
-        "GET", "POST","DELETE"
-      ],
+      "methods": ["GET", "POST", "DELETE"],
       "headers": {
-        "Access-Control-Allow-Origin": "http://localhost:5173",
+        "Access-Control-Allow-Origin": "https://socailmediaapp.vercel.app",
         "Access-Control-Allow-Credentials": "true"
       }
     }
