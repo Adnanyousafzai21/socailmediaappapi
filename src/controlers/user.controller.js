@@ -20,7 +20,7 @@ let avater
   if (req.files?.avater) {
     const avaterlocalpath = req.files?.avater[0]?.path
      avater = await uploadCoudinary(avaterlocalpath)
-SE    if (!avater) return res.send("something went wrong while uploading avater to cloudinry")
+    if (!avater) return res.send("something went wrong while uploading avater to cloudinry")
   }
 
   const createdUser = new User(

@@ -1,32 +1,35 @@
-// require('dotenv').config({path:'./env'})
-import express from "express"
+import express from "express";
 import connectDB from "./db/index.js";
-import dotenv from "dotenv"
-import cors from "cors"
-dotenv.config({path: "/.env"})
+import dotenv from "dotenv";
+import cors from "cors";
+import { userRouter, postRouter } from "./routes/routes.js";
 
-const app = express()
-app.use(express.json())
+dotenv.config({ path: "/.env" });
+
+const app = express();
+
+// Enable CORS middleware at the top
 app.use(cors({
-    origin:"*",
+    origin: "https://socailmediaapp.vercel.app",
     credentials: true
-}))
+}));
+
+app.use(express.json());
 
 connectDB()
-.then(()=>{
-    app.listen(process.env.PORT || 8000, () => {
-    console.log(`⚙️ Server is running at port : ${process.env.PORT}`);
-})
-}).catch((err) => {
-    console.log("MONGO db connection failed !!! ", err);
-})
+    .then(() => {
+        app.listen(process.env.PORT || 8000, () => {
+            console.log(`⚙️ Server is running at port : ${process.env.PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.log("MONGO db connection failed !!! ", err);
+    });
 
+// Your routes
+app.get("/", (req, res) => {
+    res.send({ message: "Congratulations, your app is working perfectly!" });
+});
 
-import  {userRouter, postRouter } from "./routes/routes.js"
-
-
-app.get("/", (req, res)=>{
-res.send({message:"congritulation your app is wroking perfictly"})
-})
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/posts", postRouter)
+app.use("/api/v1/posts", postRouter);
