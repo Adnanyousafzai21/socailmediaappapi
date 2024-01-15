@@ -13,11 +13,18 @@ const postSchema = new Schema({
     },
     comments: [{
         user: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: {
+                _id: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'User'
+                },
+                fullname: String,
+                avater: String,
+            },
             ref: 'User',
         },
         text: {
-            type: String, // corrected from "string" to String
+            type: String,
             required: true,
         },
     }],
@@ -27,8 +34,13 @@ const postSchema = new Schema({
             ref: 'User',
         }
     }]
-},{timestamps: true});
+}, { timestamps: true });
+
+postSchema.path('comments.user').ref('User'); // Add this line to define the path
 
 const Post = mongoose.model('Post', postSchema);
 
 export { Post };
+
+
+

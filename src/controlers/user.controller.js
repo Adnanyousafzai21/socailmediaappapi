@@ -20,12 +20,11 @@ let avater
   if (req.files?.avater) {
     const avaterlocalpath = req.files?.avater[0]?.path
      avater = await uploadCoudinary(avaterlocalpath)
-    console.log("avter after cloudinary", avater.url)
-    if (!avater) return res.send("something went wrong while uploading avater to cloudinry")
+SE    if (!avater) return res.send("something went wrong while uploading avater to cloudinry")
   }
 
   const createdUser = new User(
-    { fullname, email, password, avater: avater?.url || "" }
+    { fullname, email, password, avater: avater?.secure_url || "" }
   )
   const createUseResponse = await createdUser.save()
   if (!createUseResponse) {
@@ -109,7 +108,7 @@ const updatePorfile = async (req, res) => {
     if (!avater) {
       return res.status(500).send({ message: "something went wront while stroing avater" })
     }
-    existingUser.avater = avater.url
+    existingUser.avater = avater.secure_url
   }
 
   if (currentPassword && newPassword) {

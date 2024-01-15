@@ -1,15 +1,17 @@
 import { response } from "express";
 import { Post } from "../models/post.model.js";
 import { uploadCoudinary } from "../utils/coudinary.js";
+import { User } from "../models/user.model.js";
 
 
 const Posting = async (req, res) => {
     try {
         const { description, user } = req.body;
-        console.log(user)
+        console.log(req.body)
         let postFile;
         if (req.files?.file) {
             postFile = req.files?.file[0]?.path;
+            console.log("avater",postFile)
 
             if (!postFile) {
                 return res.status(400).send({ message: "There is an error while sending files to the server." });
@@ -21,7 +23,7 @@ const Posting = async (req, res) => {
             return res.status(400).send({ message: "File is not getting from Cloudinary." });
         }
 
-        const newPost = new Post({ description, file: file?.url || "", user });
+        const newPost = new Post({ description, file: file?.secure_url || "", user });
         const savePost = await newPost.save();
 
         if (!savePost) {
@@ -71,7 +73,7 @@ const updatePost = async (req, res) => {
                 return res.status(400).send({ message: "File is not coming from Cloudinary" });
             }
 
-            existingPost.file = updatedFile.url;
+            existingPost.file = updatedFile.secure_url;
         }
 
         // Save the existingPost directly
@@ -114,36 +116,48 @@ const addComment = async (req, res) => {
     try {
         const postId = req.params.postId;
         const { userId, text } = req.body;
+        console.log("add comment is hit", postId);
 
-        const existingPost = await Post.findById(postId).populate('user', 'fullname avater email');
+        const existingPost = await Post.findById(postId);
 
         if (!existingPost) {
             return res.status(404).send({ message: "Post doesn't exist" });
         }
 
-        existingPost.comments = existingPost.comments || [];
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).send({ message: "User doesn't exist" });
+        }
         const newComment = {
-            user: userId, // Ensure userId is a valid ObjectId
+            user: {
+                _id: user._id,
+                fullname: user.fullname,
+                avater: user.avater,
+            },
             text,
         };
-
+        
+        existingPost.comments = existingPost.comments || [];
         existingPost.comments.push(newComment);
-        const savePost = await existingPost.save();
-
-        // Populate the user field in the newly added comment
-        const savedComment = savePost.comments[savePost.comments.length - 1];
-        await savedComment.populate('user', 'fullname avater email').execPopulate();
-
-        if (!savePost) {
+        
+        const savedPost = await existingPost.save();
+        if (!savedPost) {
             return res.status(500).send({ message: "Error while saving comment" });
         } else {
-            return res.status(200).send({ message: "Comment is saved successfully!!", savePost, savedComment });
+            return res.status(200).send({ message: "Comment is saved successfully!!", savedPost });
         }
     } catch (error) {
         console.log("Error while adding comments", error);
         res.status(500).send("Error while adding comments");
     }
 };
+
+
+
+
+
+
 
 
 const getPosts = async (req, res) => {

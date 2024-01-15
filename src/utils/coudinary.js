@@ -11,9 +11,9 @@ const uploadCoudinary = async (localFilepath) => {
     try {
         if (!localFilepath) return null
         console.log("bere cloudinady",localFilepath)
-        const response = await cloudinary.uploader.upload(localFilepath, { resource_type: "auto" })
+        const response = await cloudinary.uploader.upload(localFilepath, {secure: true , resource_type: "auto" })
         fs.unlinkSync(localFilepath)
-        console.log("after cluodinary", response.url)
+        console.log("after cluodinary", response.secure_url)
         return response;
     } catch (error) {
         console.error("Cloudinary upload error:", error.message);
