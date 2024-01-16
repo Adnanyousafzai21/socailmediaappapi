@@ -11,12 +11,14 @@ const uploadCLOUDINARY = async (localFilepath) => {
     try {
         if (!localFilepath) return null
         console.log("before cloudinady",localFilepath)
+        console.log("Uploading to Cloudinary:", localFilepath);
         const response = await cloudinary.uploader.upload(localFilepath, {secure: true , resource_type: "auto" })
+        console.log("Cloudinary Upload Result:", result);
         fs.unlinkSync(localFilepath)
         console.log("after cluodinary", response.secure_url)
         return response;
     } catch (error) {
-        console.error("Cloudinary upload error:", error.message);
+        console.error("Error uploading to Cloudinary:", error.message);
         fs.unlinkSync(localFilepath)
         return null
 

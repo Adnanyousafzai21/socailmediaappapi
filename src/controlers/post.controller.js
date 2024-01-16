@@ -7,18 +7,18 @@ import { User } from "../models/user.model.js";
 const Posting = async (req, res) => {
     try {
         const { description, user } = req.body;
-        console.log(req.body)
+        console.log("postin req.body ",req.body)
         let postFile;
         if (req.files?.file) {
             postFile = req.files?.file[0]?.path;
-            console.log("avater",postFile)
+            console.log("avater", postFile)
 
             if (!postFile) {
                 return res.status(400).send({ message: "There is an error while sending files to the server." });
             }
         }
-        const file = await uploadCLOUDINARY(postFile);
-
+      let file = await uploadCLOUDINARY(postFile);
+cnsole.log("after getting from the cludenary",file)
         if (postFile && !file) {
             return res.status(400).send({ message: "File is not getting from Cloudinary." });
         }
@@ -31,13 +31,13 @@ const Posting = async (req, res) => {
         }
         console.log("New Post Saved:", savePost);
         return res.status(200).send({ message: "Post is saved successfully", savePost });
-    }  catch (error) {
+    } catch (error) {
         console.error("Error in Posting:", error);
         console.error("Request Body:", req.body);
         console.error("Cloudinary Upload Result:", file);
-        return res.status(500).send({ message: "Internal server error", error: error.message });
+        return res.status(500).send({ error: error.message,  message: "Internal server error"});
     }
-    
+
 };
 const getForUpdate = async (req, res) => {
     try {
@@ -45,7 +45,7 @@ const getForUpdate = async (req, res) => {
         // console.log(postId)
         const post = await Post.findById(postId)
         if (!post) return res.status(404).send({ message: "post doesn't found!!!" })
-        res.status(200).send({post})
+        res.status(200).send({ post })
     } catch (erro) {
         res.status(500).send({ message: "somthing went wrong " })
         console.log(erro)
@@ -55,7 +55,7 @@ const getForUpdate = async (req, res) => {
 const updatePost = async (req, res) => {
     try {
         const postId = req.params.userId; // Updated to use req.params.userId
-        console.log("for editing",postId)
+        console.log("for editing", postId)
         const { description } = req.body;
 
         const existingPost = await Post.findById(postId);
@@ -139,10 +139,10 @@ const addComment = async (req, res) => {
             },
             text,
         };
-        
+
         existingPost.comments = existingPost.comments || [];
         existingPost.comments.push(newComment);
-        
+
         const savedPost = await existingPost.save();
         if (!savedPost) {
             return res.status(500).send({ message: "Error while saving comment" });
