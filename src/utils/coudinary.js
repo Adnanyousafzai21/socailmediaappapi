@@ -10,7 +10,7 @@ cloudinary.config({
 const uploadCoudinary = async (localFilepath) => {
     try {
         if (!localFilepath) return null
-        console.log("bere cloudinady",localFilepath)
+        console.log("before cloudinady",localFilepath)
         const response = await cloudinary.uploader.upload(localFilepath, {secure: true , resource_type: "auto" })
         fs.unlinkSync(localFilepath)
         console.log("after cluodinary", response.secure_url)

@@ -34,7 +34,7 @@ const Posting = async (req, res) => {
         return res.status(200).send({ message: "Post is saved successfully", savePost });
     } catch (error) {
         console.error("Error in Posting:", error);
-        return res.status(500).send({ message: "Internal server error" });
+        return res.status(500).send({ message: "Internal server error", error:error.message });
     }
 };
 const getForUpdate = async (req, res) => {
