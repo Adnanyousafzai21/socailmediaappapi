@@ -11,7 +11,7 @@
       "src": "/api/v1/posts/getPosts",
       "methods": ["GET","DELETE","POST"],
       "headers": {
-        "Access-Control-Allow-Origin": "https://socailmediaapp.vercel.app",
+        "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": "true"
       },
       "dest": "src/index.js"
@@ -21,7 +21,7 @@
       "dest": "src/index.js",
       "methods": ["GET", "POST", "DELETE"],
       "headers": {
-        "Access-Control-Allow-Origin": "https://socailmediaapp.vercel.app",
+        "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": "true"
       }
     }

@@ -8,9 +8,8 @@ dotenv.config({ path: "/.env" });
 
 const app = express();
 
-// Enable CORS middleware at the top
 app.use(cors({
-    origin: "https://socailmediaapp.vercel.app",
+    origin: "*",
     credentials: true
 }));
 
