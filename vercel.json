@@ -1,29 +1,19 @@
 {
-  "version": 2,
   "builds": [
-    {
-      "src": "src/index.js",
-      "use": "@vercel/node"
-    }
+      {
+          "src": "index.js",
+          "use": "@vercel/node"
+      }
   ],
   "routes": [
-    {
-      "src": "/api/v1/posts/getPosts",
-      "methods": ["GET","DELETE","POST"],
-      "headers": {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": "true"
-      },
-      "dest": "src/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "src/index.js",
-      "methods": ["GET", "POST", "DELETE"],
-      "headers": {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": "true"
+      {
+        "src": "/(.*)",
+        "dest": "index.js",
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+          "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+        }
       }
-    }
   ]
 }
