@@ -1,6 +1,6 @@
 import { response } from "express";
 import { Post } from "../models/post.model.js";
-import { uploadCoudinary } from "../utils/coudinary.js";
+import { uploadCLOUDINARY } from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
 
 
@@ -17,7 +17,7 @@ const Posting = async (req, res) => {
                 return res.status(400).send({ message: "There is an error while sending files to the server." });
             }
         }
-        const file = await uploadCoudinary(postFile);
+        const file = await uploadCLOUDINARY(postFile);
 
         if (postFile && !file) {
             return res.status(400).send({ message: "File is not getting from Cloudinary." });
@@ -29,13 +29,15 @@ const Posting = async (req, res) => {
         if (!savePost) {
             return res.status(500).send({ message: "Post is not saved." });
         }
-        // await savePost.populate('user', 'name email').execPopulate();
         console.log("New Post Saved:", savePost);
         return res.status(200).send({ message: "Post is saved successfully", savePost });
-    } catch (error) {
+    }  catch (error) {
         console.error("Error in Posting:", error);
-        return res.status(500).send({ message: "Internal server error", error:error.message });
+        console.error("Request Body:", req.body);
+        console.error("Cloudinary Upload Result:", file);
+        return res.status(500).send({ message: "Internal server error", error: error.message });
     }
+    
 };
 const getForUpdate = async (req, res) => {
     try {
@@ -67,7 +69,7 @@ const updatePost = async (req, res) => {
         if (req.files?.file) {
             const localFilePath = req.files.file[0]?.path;
             console.log(localFilePath)
-            const updatedFile = await uploadCoudinary(localFilePath);
+            const updatedFile = await uploadCLOUDINARY(localFilePath);
 
             if (!updatedFile) {
                 return res.status(400).send({ message: "File is not coming from Cloudinary" });

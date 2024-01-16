@@ -3,11 +3,11 @@ import fs from "fs"
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.COUDINARY_API_KEY,
-    api_secret: process.env.COUDINARY_API_SECRIT
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRIT
 });
 
-const uploadCoudinary = async (localFilepath) => {
+const uploadCLOUDINARY = async (localFilepath) => {
     try {
         if (!localFilepath) return null
         console.log("before cloudinady",localFilepath)
@@ -24,4 +24,4 @@ const uploadCoudinary = async (localFilepath) => {
 
 }
 
-export {uploadCoudinary}
+export {uploadCLOUDINARY}

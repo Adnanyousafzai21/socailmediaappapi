@@ -1,6 +1,6 @@
 
 import { User } from "../models/user.model.js"
-import { uploadCoudinary } from "../utils/coudinary.js";
+import { uploadCLOUDINARY } from "../utils/cloudinary.js";
 import * as bcrypt from "bcrypt";
 import hash from "bcrypt";
 import jwt from "jsonwebtoken"
@@ -19,7 +19,7 @@ try{
 let avater
   if (req.files?.avater) {
     const avaterlocalpath = req.files?.avater[0]?.path
-     avater = await uploadCoudinary(avaterlocalpath)
+     avater = await uploadCLOUDINARY(avaterlocalpath)
     if (!avater) return res.send("something went wrong while uploading avater to cloudinry")
   }
 
@@ -104,7 +104,7 @@ const updatePorfile = async (req, res) => {
 
   if (req.files?.avater) {
     const avaterLacalpath = req.files.avater[0]?.path
-    const avater = await uploadCoudinary(avaterLacalpath)
+    const avater = await uploadCLOUDINARY(avaterLacalpath)
     if (!avater) {
       return res.status(500).send({ message: "something went wront while stroing avater" })
     }
