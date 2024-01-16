@@ -13,7 +13,6 @@ const uploadCLOUDINARY = async (localFilepath) => {
         console.log("before cloudinady",localFilepath)
         console.log("Uploading to Cloudinary:", localFilepath);
         const response = await cloudinary.uploader.upload(localFilepath, {secure: true , resource_type: "auto" })
-        console.log("Cloudinary Upload Result:", result);
         fs.unlinkSync(localFilepath)
         console.log("after cluodinary", response.secure_url)
         return response;

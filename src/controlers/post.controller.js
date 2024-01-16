@@ -18,7 +18,7 @@ const Posting = async (req, res) => {
             }
         }
       let file = await uploadCLOUDINARY(postFile);
-cnsole.log("after getting from the cludenary",file)
+// cnsole.log("after getting from the cludenary",file)s
         if (postFile && !file) {
             return res.status(400).send({ message: "File is not getting from Cloudinary." });
         }
