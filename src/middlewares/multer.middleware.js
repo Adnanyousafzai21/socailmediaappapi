@@ -1,16 +1,22 @@
-import multer from 'multer';
-import { join } from 'path';
+
+
+import multer from "multer";
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const destinationPath = join(process.cwd(), 'public', 'temp');
-    console.log("File Destination Path:", destinationPath);
-    cb(null, destinationPath);
-  },
-  filename: function (req, file, cb) {
-    console.log("Original Filename:", file.originalname);
-    cb(null, file.originalname);
-  }
-});
+    destination: function (req, file, cb) {
+      cb(null, "./public/temp")
+    },
+    filename: function (req, file, cb) {
+      
+      cb(null, file.originalname)
+    }
+  })
+  
+export const upload = multer({ 
+    storage, 
+})
 
-export const upload = multer({ storage: storage });
+// import multer from 'multer';
+
+// const storage = multer.memoryStorage(); // Use memory storage instead of disk storage
+// export const upload = multer({ storage: storage });

@@ -7,7 +7,8 @@ import { User } from "../models/user.model.js";
 const Posting = async (req, res) => {
     try {
         const { description, user } = req.body;
-        console.log("postin req.body ",req.body)
+        // console.log("postin req.body ",req.body)   ;    
+        console.log("postin req.files ",req.files?.file)
         let postFile;
         if (req.files?.file) {
             postFile = req.files?.file[0]?.path;
@@ -18,7 +19,7 @@ const Posting = async (req, res) => {
             }
         }
       let file = await uploadCLOUDINARY(postFile);
-// cnsole.log("after getting from the cludenary",file)s
+      console.log("after cloudinary", file)
         if (postFile && !file) {
             return res.status(400).send({ message: "File is not getting from Cloudinary." });
         }
