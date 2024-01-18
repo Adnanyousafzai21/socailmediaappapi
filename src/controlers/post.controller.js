@@ -8,7 +8,7 @@ const Posting = async (req, res) => {
     try {
         const { description, user } = req.body;
         // console.log("postin req.body ",req.body)   ;    
-        console.log("postin req.files ",req.files?.file)
+        console.log("postin req.files ", req.files?.file)
         let postFile;
         if (req.files?.file) {
             postFile = req.files?.file[0]?.path;
@@ -18,8 +18,8 @@ const Posting = async (req, res) => {
                 return res.status(400).send({ message: "There is an error while sending files to the server." });
             }
         }
-      let file = await uploadCLOUDINARY(postFile);
-      console.log("after cloudinary", file)
+        let file = await uploadCLOUDINARY(postFile);
+        console.log("after cloudinary", file)
         if (postFile && !file) {
             return res.status(400).send({ message: "File is not getting from Cloudinary." });
         }
@@ -36,7 +36,7 @@ const Posting = async (req, res) => {
         console.error("Error in Posting:", error);
         console.error("Request Body:", req.body);
         console.error("Cloudinary Upload Result:", file);
-        return res.status(500).send({ error: error.message,  message: "Internal server error"});
+        return res.status(500).send({ error: error.message, message: "Internal server error" });
     }
 
 };
@@ -119,7 +119,7 @@ const addComment = async (req, res) => {
     try {
         const postId = req.params.postId;
         const { userId, text } = req.body;
-        console.log("add comment is hit", postId);
+        console.log("add comment is text", text);
 
         const existingPost = await Post.findById(postId);
 
@@ -158,10 +158,29 @@ const addComment = async (req, res) => {
 
 
 
+const deleteComment = async (req, res) => {
+    try {
+        const { postId, commentId } = req.params;
+console.log("hit the delete commetn with id", commentId , postId)
+        const post = await Post.findById(postId);
 
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
 
+        console.log("postcomments", post.comments)
 
+        const updatedComments = post.comments.filter((comment) => comment._id.toString() !== commentId);
+        console.log("commentId", updatedComments)
+        post.comments = updatedComments
+        await post.save();
 
+        res.status(200).json({ message: 'Comment deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
 
 const getPosts = async (req, res) => {
     try {
@@ -195,4 +214,4 @@ const getYourPost = async (req, res) => {
 
 
 
-export { Posting, updatePost, postDelete, addComment, getPosts, getYourPost, getForUpdate }
+export { Posting, updatePost, postDelete, addComment, getPosts, getYourPost, getForUpdate, deleteComment }
