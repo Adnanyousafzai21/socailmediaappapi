@@ -39,7 +39,7 @@ let avater
 
   )
 
-  res.status(200).send({ massage: "User created succesfully", createdUser, Accesstoken })
+  res.status(200).send({ massage: "User created succesfully", user:createdUser, Accesstoken })
 
 
 }catch(error){
