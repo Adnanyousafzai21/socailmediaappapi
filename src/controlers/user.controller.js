@@ -9,18 +9,18 @@ const register = async (req, res,) => {
 try{
   const { fullname, email, password } = req.body;
   if ([fullname, email, password].some((field) => field === "")) {
-    return res.status(400).send({ error: "All fields are required" });
+    return res.status(400).send({ message: "All fields are required" });
   }
 
   const existuser = await User.findOne({ email })
   if (existuser) {
-    return res.status(409).send("Email already exist")
+    return res.status(409).send({message:"Email already exist"})
   }
 let avater
   if (req.files?.avater) {
     const avaterlocalpath = req.files?.avater[0]?.path
      avater = await uploadCLOUDINARY(avaterlocalpath)
-    if (!avater) return res.send("something went wrong while uploading avater to cloudinry")
+    if (!avater) return res.send({message:"something went wrong while uploading avater to cloudinry"})
   }
 
   const createdUser = new User(
@@ -29,7 +29,7 @@ let avater
   const createUseResponse = await createdUser.save()
   if (!createUseResponse) {
 
-    return res.status(500).send({ error: "somthins went wrong while storing user in datbase" })
+    return res.status(500).send({ message: "somthins went wrong while storing user in datbase" })
 
   }
   const Accesstoken = jwt.sign(
@@ -39,7 +39,7 @@ let avater
 
   )
 
-  res.status(200).send({ massage: "User created succesfully", user:createdUser, Accesstoken })
+  res.status(200).send({ massage: "your account created succesfully", user:createdUser, Accesstoken })
 
 
 }catch(error){
@@ -57,15 +57,13 @@ const login = async (req, res) => {
 
   const { password, email } = req.body
   const user = await User.findOne({ email })
-  // console.log("Retriveed user",  user)
-  // res.send(user)
   if (!user) {
-    return res.status(400).send({ message: "invalid email" })
+    return res.status(404).send({ message: "invalid email or password" })
   }
   const isPasswordCorrected = await user.isPasswordCorrect(password)
 
   if (!isPasswordCorrected) {
-    return res.status(400).send({ message: "invalid password" })
+    return res.status(404).send({ message: "invalid email or password" })
   }
 
   const Accesstoken = jwt.sign(
@@ -75,7 +73,7 @@ const login = async (req, res) => {
 
   )
 
-  res.status(200).send({ message: "login successfylly ", user, Accesstoken })
+  res.status(200).send({ message: "have been logedin  successfylly ", user, Accesstoken })
 }
 
 
