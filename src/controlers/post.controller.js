@@ -2,7 +2,7 @@ import { response } from "express";
 import { Post } from "../models/post.model.js";
 import { uploadCLOUDINARY } from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
-
+import mongoose from "mongoose";
 
 const Posting = async (req, res) => {
     try {
@@ -199,18 +199,27 @@ const getPosts = async (req, res) => {
     }
 };
 
+
+
 const getYourPost = async (req, res) => {
     try {
         const userId = req.params.userId
-        // console.log("user id", userId)
-        const yourPosts = await Post.find({ "user": userId }).p
-        if (yourPosts.length === 0) return res.send("your post is not found ")
-        res.status(200).send({ message: "your post fetched successfully ", yourPosts })
+        console.log("user id", userId);
+        const posts = await Post.find().populate("user", "fullname avater email");
+        const yourpost= posts.filter((post)=>post.user._id.toString()===userId)
+        console.log(yourpost);
+
+        if (yourpost.length === 0) {
+            return res.status(404).send("Your posts not found");
+        }
+
+        res.status(200).send({ message: "Your posts fetched successfully", yourpost });
     } catch (error) {
         res.status(500).send({ message: "Internal server error", error });
-        console.log("server errror", error)
+        console.log("server error", error);
     }
 }
+
 
 
 
