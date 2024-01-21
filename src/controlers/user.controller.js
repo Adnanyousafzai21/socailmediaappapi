@@ -123,7 +123,7 @@ const updatePorfile = async (req, res) => {
   if (!updatedUser) {
     return res.status(500).send({ message: "there is somthing went wrong while updating the profile " })
   }
-  res.status(200).send({ message: "profile updated successfully", updatedUser })
+  res.status(200).send({ message: "profile updated successfully", user:updatedUser })
 
 
 
