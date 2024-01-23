@@ -182,6 +182,37 @@ console.log("hit the delete commetn with id", commentId , postId)
     }
 }
 
+const LikePost = async (req, res) => {
+    const postId = req.params.postId;
+    const userId = req.params.userId;
+
+    try {
+        const post = await Post.findById(postId);
+
+        if (!post) {
+            return res.status(404).send({ message: "Post not found" });
+        }
+
+        const alreadyLiked = post.likes.some(like => like.user.toString() === userId);
+
+        if (!alreadyLiked) {
+            post.likes.push({ user: userId });
+        } else {
+            post.likes = post.likes.filter(like => like.user.toString() !== userId);
+        }
+
+     const likedpost=   await post.save();
+
+        // Send a response indicating success
+        res.status(200).send({ message: "Like toggled successfully", likedpost });
+    } catch (error) {
+        console.error("Error toggling like:", error);
+        res.status(500).send({ message: "Internal server error", error });
+    }
+};
+
+
+
 const getPosts = async (req, res) => {
     try {
         const posts = await Post.find().populate("user", "fullname avater email")
@@ -201,15 +232,13 @@ const getPosts = async (req, res) => {
 
 
 
-const getYourPost = async (req, res) => {
+const getSinglePost = async (req, res) => {
     try {
         const userId = req.params.userId
         console.log("user id", userId);
-        const posts = await Post.find().populate("user", "fullname avater email");
-        const yourpost= posts.filter((post)=>post.user._id.toString()===userId)
-        console.log(yourpost);
-
-        if (yourpost.length === 0) {
+        const yourpost = await Post.find({"user":userId}).populate("user","id  fullname avater")
+   
+        if (!yourpost) {
             return res.status(404).send("Your posts not found");
         }
 
@@ -223,4 +252,4 @@ const getYourPost = async (req, res) => {
 
 
 
-export { Posting, updatePost, postDelete, addComment, getPosts, getYourPost, getForUpdate, deleteComment }
+export { Posting, updatePost, postDelete, addComment, getPosts, getSinglePost, getForUpdate, deleteComment , LikePost}
