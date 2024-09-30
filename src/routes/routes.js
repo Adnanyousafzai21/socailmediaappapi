@@ -13,8 +13,8 @@ userRouter.post("/register", upload.fields([{ name: "avater", maxCount: 2 }]), r
 userRouter.post("/updateProfile/:userId", upload.fields([{ name: "avater", maxCount: 2 }]), updatePorfile);
 userRouter.post("/login", login);
 
-postRouter.route("/Posting").post(upload.fields([{ name: "file" }]), Posting);
-postRouter.route("/updatePost/:userId").post(upload.fields([{ name: "file" }]), updatePost);
+postRouter.route("/Posting").post( Posting);
+postRouter.route("/updatePost/:userId").post(updatePost);
 postRouter.route("/postDelete/:postId").delete(postDelete);
 postRouter.route("/addcomment/:postId/comment").post(addComment);
 postRouter.route("/likeToggling/:postId/:userId").post(LikePost);

@@ -6,27 +6,13 @@ import mongoose from "mongoose";
 
 const Posting = async (req, res) => {
     try {
-        const { description, user } = req.body;
-        // console.log("postin req.body ",req.body)   ;    
-        console.log("postin req.files ", req.files?.file)
-        let postFile;
-        if (req.files?.file) {
-            postFile = req.files?.file[0]?.path;
-            console.log("avater", postFile)
-
-            if (!postFile) {
-                return res.status(400).send({ message: "There is an error while sending files to the server." });
-            }
+        const { description, user, file } = req.body;
+        if (!user && !description || !file) {
+            return res.status(400).send({ message: "the required data is missed" })
         }
-        let file = await uploadCLOUDINARY(postFile);
-        console.log("after cloudinary", file)
-        if (postFile && !file) {
-            return res.status(400).send({ message: "File is not getting from Cloudinary." });
-        }
-
-        const newPost = new Post({ description, file: file?.secure_url || "", user });
+        console.log("postin req.files ", file, description, user)
+        const newPost = new Post({ description, file, user });
         const savePost = await newPost.save();
-
         if (!savePost) {
             return res.status(500).send({ message: "Post is not saved." });
         }
@@ -43,7 +29,6 @@ const Posting = async (req, res) => {
 const getForUpdate = async (req, res) => {
     try {
         const postId = req.params.postId
-        // console.log(postId)
         const post = await Post.findById(postId)
         if (!post) return res.status(404).send({ message: "post doesn't found!!!" })
         res.status(200).send({ post })
@@ -56,8 +41,9 @@ const getForUpdate = async (req, res) => {
 const updatePost = async (req, res) => {
     try {
         const postId = req.params.userId; // Updated to use req.params.userId
-        console.log("for editing", postId)
-        const { description } = req.body;
+
+        const { description, file } = req.body;
+        console.log("for editing", description, file)
 
         const existingPost = await Post.findById(postId);
 
@@ -67,19 +53,9 @@ const updatePost = async (req, res) => {
 
         existingPost.description = description || existingPost.description;
 
-        if (req.files?.file) {
-            const localFilePath = req.files.file[0]?.path;
-            console.log(localFilePath)
-            const updatedFile = await uploadCLOUDINARY(localFilePath);
 
-            if (!updatedFile) {
-                return res.status(400).send({ message: "File is not coming from Cloudinary" });
-            }
+        existingPost.file = file || existingPost.file;
 
-            existingPost.file = updatedFile.secure_url;
-        }
-
-        // Save the existingPost directly
         const updatedPost = await existingPost.save();
 
         if (!updatedPost) {
@@ -161,7 +137,7 @@ const addComment = async (req, res) => {
 const deleteComment = async (req, res) => {
     try {
         const { postId, commentId } = req.params;
-console.log("hit the delete commetn with id", commentId , postId)
+        console.log("hit the delete commetn with id", commentId, postId)
         const post = await Post.findById(postId);
 
         if (!post) {
@@ -201,7 +177,7 @@ const LikePost = async (req, res) => {
             post.likes = post.likes.filter(like => like.user.toString() !== userId);
         }
 
-     const likedpost=   await post.save();
+        const likedpost = await post.save();
 
         // Send a response indicating success
         res.status(200).send({ message: "Like toggled successfully", likedpost });
@@ -236,8 +212,8 @@ const getSinglePost = async (req, res) => {
     try {
         const userId = req.params.userId
         console.log("user id", userId);
-        const yourpost = await Post.find({"user":userId}).populate("user","id  fullname avater")
-   
+        const yourpost = await Post.find({ "user": userId }).populate("user", "id  fullname avater")
+
         if (!yourpost) {
             return res.status(404).send("Your posts not found");
         }
@@ -252,4 +228,4 @@ const getSinglePost = async (req, res) => {
 
 
 
-export { Posting, updatePost, postDelete, addComment, getPosts, getSinglePost, getForUpdate, deleteComment , LikePost}
+export { Posting, updatePost, postDelete, addComment, getPosts, getSinglePost, getForUpdate, deleteComment, LikePost }
