@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { register } from "../controlers/user.controller.js";
-import { upload } from "../middlewares/multer.middleware.js";
 import { login } from "../controlers/user.controller.js";
 import { updatePorfile } from "../controlers/user.controller.js";
 
@@ -9,8 +8,8 @@ import { LikePost, Posting, addComment, deleteComment, getForUpdate, getPosts, g
 const userRouter = Router();
 const postRouter = Router();
 
-userRouter.post("/register", upload.fields([{ name: "avater", maxCount: 2 }]), register);
-userRouter.post("/updateProfile/:userId", upload.fields([{ name: "avater", maxCount: 2 }]), updatePorfile);
+userRouter.post("/register",register);
+userRouter.post("/updateProfile/:userId", updatePorfile);
 userRouter.post("/login", login);
 
 postRouter.route("/Posting").post( Posting);

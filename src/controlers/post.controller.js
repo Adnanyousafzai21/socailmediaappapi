@@ -1,6 +1,5 @@
 import { response } from "express";
 import { Post } from "../models/post.model.js";
-import { uploadCLOUDINARY } from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
 import mongoose from "mongoose";
 
